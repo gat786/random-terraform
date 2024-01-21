@@ -7,3 +7,5 @@ database_user_name          = "chainlink"
 compute_instance_name         = "node-instance"
 compute_instance_machine_type = "n2-standard-2"
 compute_instance_sa_name      = "node-service-account"
+
+secret_name_db_password       = "chainlink-db-password"

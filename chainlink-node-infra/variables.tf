@@ -29,3 +29,7 @@ variable "compute_instance_name" {
 variable "compute_instance_machine_type" {
   description = "value of the compute instance machine type"
 }
+
+variable "secret_name_db_password" {
+  description = "value of the secret name for the database password"
+}

@@ -12,14 +12,14 @@ resource "google_sql_database_instance" "node-db" {
 
 resource "random_password" "password" {
   length           = 16
-  special          = true
+  special          = false
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 resource "google_sql_user" "root_user" {
   name      = var.database_user_name
   instance  = google_sql_database_instance.node-db.name
-  password  = random_password.password.lower
+  password  = random_password.password.result
 }
 
 resource "google_service_account" "default" {
@@ -54,4 +54,24 @@ resource "google_compute_instance" "default" {
     email  = google_service_account.default.email
     scopes = ["cloud-platform"]
   }
+}
+
+resource "google_secret_manager_secret" "chainlink-node-db-password" {
+  secret_id = "chainlink-node-db-password"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "chainlink-node-db-password" {
+  secret = google_secret_manager_secret.chainlink-node-db-password.id
+  secret_data = random_password.password.result
+}
+
+
+output "database_password" {
+  value     = random_password.password.result
+  # this is because I want to see the value in the output
+  # normally you would have it set to true
+  sensitive = true
 }
