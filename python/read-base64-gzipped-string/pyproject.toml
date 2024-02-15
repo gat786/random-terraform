@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "read-base64-gzipped-string"
+version = "0.1.0"
+description = ""
+authors = ["Ganesh Tiwari <ganesht049@gmail.com>"]
+readme = "README.md"
+packages = [{include = "read_base64_gzipped_string"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "read_base64_gzipped_string.main:main"

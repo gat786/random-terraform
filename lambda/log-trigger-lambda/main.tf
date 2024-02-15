@@ -2,11 +2,11 @@ resource "aws_lambda_permission" "logging" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.logging.function_name
   principal     = "logs.${var.region}.amazonaws.com"
-  source_arn    = "${aws_cloudwatch_log_group.default.arn}:*"
+  source_arn    = "${data.aws_cloudwatch_log_group.salesforce_notion_logs.arn}:*"
 }
 
-resource "aws_cloudwatch_log_group" "default" {
-  name = "/default"
+data "aws_cloudwatch_log_group" "salesforce_notion_logs" {
+  name = "/aws/lambda/salesforce-notion-integration"
 }
 
 resource "aws_cloudwatch_log_group" "execution_logs" {
@@ -17,7 +17,7 @@ resource "aws_cloudwatch_log_subscription_filter" "logging" {
   depends_on      = [aws_lambda_permission.logging]
   destination_arn = aws_lambda_function.logging.arn
   filter_pattern  = ""
-  log_group_name  = aws_cloudwatch_log_group.default.name
+  log_group_name  = data.aws_cloudwatch_log_group.salesforce_notion_logs.name
   name            = "logging_default"
 }
 
@@ -54,7 +54,7 @@ resource "aws_iam_role_policy" "logs" {
           "logs:PutLogEvents",
         ],
         "Effect": "Allow",
-        "Resource": "arn:aws:logs:${var.region}:${var.account_id}:log-group:${var.log_group_name}"
+        "Resource": "arn:aws:logs:${var.region}:${var.account_id}:*"
       }
     ]
   })
